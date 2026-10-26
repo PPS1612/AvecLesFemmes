@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\DiscriminatorMap([
     'campagne' => Campagne::class,
     'tontine' => Tontine::class,
+    'epargne' => Epargne::class,
 ])]
 class Campagne
 {
