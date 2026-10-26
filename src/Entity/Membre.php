@@ -12,6 +12,10 @@ class Membre extends User
     #[ORM\Column(enumType: Fonction::class)]
     private ?Fonction $fonction = null;
 
+    #[ORM\ManyToOne(inversedBy: 'membres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Groupement $groupement = null;
+
     public function getFonction(): ?Fonction
     {
         return $this->fonction;
@@ -20,6 +24,18 @@ class Membre extends User
     public function setFonction(?Fonction $fonction): static
     {
         $this->fonction = $fonction;
+
+        return $this;
+    }
+
+    public function getGroupement(): ?Groupement
+    {
+        return $this->groupement;
+    }
+
+    public function setGroupement(?Groupement $groupement): static
+    {
+        $this->groupement = $groupement;
 
         return $this;
     }
