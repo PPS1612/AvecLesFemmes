@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\ModeRemboursement;
 use App\Repository\PretRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PretRepository::class)]
@@ -18,7 +20,7 @@ class Pret
     private ?float $montant = null;
 
     #[ORM\Column]
-    private ?\DateTime $datSouscription = null;
+    private ?\DateTime $dateSouscription = null;
 
     #[ORM\Column]
     private ?\DateTime $dateEcheance = null;
@@ -28,6 +30,21 @@ class Pret
 
     #[ORM\Column(enumType: ModeRemboursement::class)]
     private ?ModeRemboursement $modeRemboursement = null;
+
+    #[ORM\OneToOne(inversedBy: 'pret')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Demande $demande = null;
+
+    /**
+     * @var Collection<int, Remboursement>
+     */
+    #[ORM\OneToMany(targetEntity: Remboursement::class, mappedBy: 'pret')]
+    private Collection $remboursements;
+
+    public function __construct()
+    {
+        $this->remboursements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -46,14 +63,14 @@ class Pret
         return $this;
     }
 
-    public function getDatSouscription(): ?\DateTime
+    public function getDateSouscription(): ?\DateTime
     {
-        return $this->datSouscription;
+        return $this->dateSouscription;
     }
 
-    public function setDatSouscription(\DateTime $datSouscription): static
+    public function setDateSouscription(\DateTime $dateSouscription): static
     {
-        $this->datSouscription = $datSouscription;
+        $this->dateSouscription = $dateSouscription;
 
         return $this;
     }
@@ -90,6 +107,48 @@ class Pret
     public function setModeRemboursement(ModeRemboursement $modeRemboursement): static
     {
         $this->modeRemboursement = $modeRemboursement;
+
+        return $this;
+    }
+
+    public function getDemande(): ?Demande
+    {
+        return $this->demande;
+    }
+
+    public function setDemande(Demande $demande): static
+    {
+        $this->demande = $demande;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Remboursement>
+     */
+    public function getRemboursements(): Collection
+    {
+        return $this->remboursements;
+    }
+
+    public function addRemboursement(Remboursement $remboursement): static
+    {
+        if (!$this->remboursements->contains($remboursement)) {
+            $this->remboursements->add($remboursement);
+            $remboursement->setPret($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemboursement(Remboursement $remboursement): static
+    {
+        if ($this->remboursements->removeElement($remboursement)) {
+            // set the owning side to null (unless already changed)
+            if ($remboursement->getPret() === $this) {
+                $remboursement->setPret(null);
+            }
+        }
 
         return $this;
     }

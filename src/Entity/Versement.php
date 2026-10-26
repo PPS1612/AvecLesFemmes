@@ -21,8 +21,12 @@ class Versement
     #[ORM\Column(enumType: StatutVersement::class)]
     private ?StatutVersement $statutVersement = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $dateRattrapage = null;
+
+    #[ORM\ManyToOne(inversedBy: 'versements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Participation $participation = null;
 
     public function getId(): ?int
     {
@@ -58,9 +62,21 @@ class Versement
         return $this->dateRattrapage;
     }
 
-    public function setDateRattrapage(\DateTime $dateRattrapage): static
+    public function setDateRattrapage(?\DateTime $dateRattrapage): static
     {
         $this->dateRattrapage = $dateRattrapage;
+
+        return $this;
+    }
+
+    public function getParticipation(): ?Participation
+    {
+        return $this->participation;
+    }
+
+    public function setParticipation(?Participation $participation): static
+    {
+        $this->participation = $participation;
 
         return $this;
     }
