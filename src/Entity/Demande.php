@@ -26,8 +26,18 @@ class Demande
     #[ORM\Column]
     private ?\DateTime $dateDemande = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $dateTraitement = null;
+
+    #[ORM\ManyToOne(inversedBy: 'demandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Participation $participation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'demandes')]
+    private ?Admin $admin = null;
+
+    #[ORM\OneToOne(mappedBy: 'demande')]
+    private ?Pret $pret = null;
 
     public function getId(): ?int
     {
@@ -87,9 +97,45 @@ class Demande
         return $this->dateTraitement;
     }
 
-    public function setDateTraitement(\DateTime $dateTraitement): static
+    public function setDateTraitement(?\DateTime $dateTraitement): static
     {
         $this->dateTraitement = $dateTraitement;
+
+        return $this;
+    }
+
+    public function getParticipation(): ?Participation
+    {
+        return $this->participation;
+    }
+
+    public function setParticipation(?Participation $participation): static
+    {
+        $this->participation = $participation;
+
+        return $this;
+    }
+
+    public function getAdmin(): ?Admin
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?Admin $admin): static
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function getPret(): ?Pret
+    {
+        return $this->pret;
+    }
+
+    public function setPret(?Pret $pret): static
+    {
+        $this->pret = $pret;
 
         return $this;
     }

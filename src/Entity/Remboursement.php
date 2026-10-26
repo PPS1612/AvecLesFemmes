@@ -19,6 +19,10 @@ class Remboursement
     #[ORM\Column]
     private ?float $montant = null;
 
+    #[ORM\ManyToOne(inversedBy: 'remboursements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Pret $pret = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +48,18 @@ class Remboursement
     public function setMontant(float $montant): static
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getPret(): ?Pret
+    {
+        return $this->pret;
+    }
+
+    public function setPret(?Pret $pret): static
+    {
+        $this->pret = $pret;
 
         return $this;
     }

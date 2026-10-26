@@ -13,17 +13,20 @@ class Cagnote
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $dateAttribution = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $montantTheorique = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $montantAttribue = null;
 
     #[ORM\Column]
     private ?int $ordrePassage = null;
+
+    #[ORM\OneToOne(mappedBy: 'cagnote')]
+    private ?Participation $participation = null;
 
     public function getId(): ?int
     {
@@ -35,7 +38,7 @@ class Cagnote
         return $this->dateAttribution;
     }
 
-    public function setDateAttribution(\DateTime $dateAttribution): static
+    public function setDateAttribution(?\DateTime $dateAttribution): static
     {
         $this->dateAttribution = $dateAttribution;
 
@@ -47,7 +50,7 @@ class Cagnote
         return $this->montantTheorique;
     }
 
-    public function setMontantTheorique(float $montantTheorique): static
+    public function setMontantTheorique(?float $montantTheorique): static
     {
         $this->montantTheorique = $montantTheorique;
 
@@ -59,7 +62,7 @@ class Cagnote
         return $this->montantAttribue;
     }
 
-    public function setMontantAttribue(float $montantAttribue): static
+    public function setMontantAttribue(?float $montantAttribue): static
     {
         $this->montantAttribue = $montantAttribue;
 
@@ -74,6 +77,18 @@ class Cagnote
     public function setOrdrePassage(int $ordrePassage): static
     {
         $this->ordrePassage = $ordrePassage;
+
+        return $this;
+    }
+
+    public function getParticipation(): ?Participation
+    {
+        return $this->participation;
+    }
+
+    public function setParticipation(?Participation $participation): static
+    {
+        $this->participation = $participation;
 
         return $this;
     }
